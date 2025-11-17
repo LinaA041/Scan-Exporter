@@ -52,20 +52,31 @@ alertRules:
           description: "{{ $labels.name }} of job {{ $labels.job }} has {{ $value }} ports that should not be closed."
 
 targets: |-
-         timeout: 2
-         limit: 1024
-         targets:
-             - name: "app1"
-               ip: "198.51.100.1"
-               tcp:
-                 period: "10s"
-                 range: "reserved"
-                 expected: "53"
-             - name: "app2"
-               ip: "198.51.100.2"
-               tcp:
-                 period: "1m"
-                 range: "all"
-                 expected: "22,443"
-               icmp:
-                 period: "30s"
+        timeout: 2
+        limit: 1024
+        targets:
+            - name: "kubernetes-api"
+              ip: "10.96.0.1"
+              tcp:
+                period: "30s"
+                range: "reserved"
+                expected: "443"
+            
+            - name: "kube-dns"
+              ip: "10.96.0.10"
+              tcp:
+                period: "30s"
+                range: "reserved"
+                expected: "53"
+              icmp:
+                period: "30s"
+            
+            - name: "google-dns"
+              ip: "8.8.8.8"
+              tcp:
+                period: "1m"
+                range: "reserved"
+                expected: "53"
+              icmp:
+                period: "30s"
+

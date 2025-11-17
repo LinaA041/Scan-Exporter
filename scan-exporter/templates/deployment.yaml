@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    annotations:
-      {{ toYaml .Values.deployment.annotations }}
     name: {{ include "scanexporter.fullname" . }}
     labels:
         app: {{ include "scanexporter.fullname" . }}
@@ -15,28 +13,28 @@ spec:
         metadata:
             labels:
                 app: {{ include "scanexporter.fullname" . }}
-        spec:                
+        spec:
             containers:
-                - name: {{ include "scanexporter.fullname" . }}
-                  image: {{ .Values.scanexporter.container.image }}
-                  args: ["-config", "/etc/scan-exporter/config.yaml"]
-                  imagePullPolicy: {{ .Values.scanexporter.container.imagePullPolicy }}
-                  volumeMounts:
-                    - name: config
-                      mountPath: "/etc/scan-exporter"
-                      readOnly: true
-                  resources:
-{{ toYaml .Values.scanexporter.resources | indent 20 }}
-                  livenessProbe:
-                      httpGet:
-                          path: {{ .Values.scanexporter.liveness.path }}
-                          port: {{ .Values.scanexporter.container.port }}
-                      initialDelaySeconds: {{ .Values.scanexporter.liveness.initialDelay }}
-                      periodSeconds: {{ .Values.scanexporter.liveness.period }}
-                  ports:
-                      - name: "metrics"
-                        containerPort: {{ .Values.scanexporter.container.port }}
-            volumes:
+            - name: {{ include "scanexporter.fullname" . }}
+              image: {{ .Values.scanexporter.container.image }}
+              args: ["-config", "/etc/scan-exporter/config.yaml"]
+              imagePullPolicy: {{ .Values.scanexporter.container.imagePullPolicy }}
+              volumeMounts:
               - name: config
-                configMap:
-                    name: scan-exporter-config
+                mountPath: "/etc/scan-exporter"
+                readOnly: true
+            resources:
+{{ toYaml .Values.scanexporter.resources | indent 20 }}
+            livenessProbe:
+                httpGet:
+                    path: {{ .Values.scanexporter.liveness.path }}
+                    port: {{ .Values.scanexporter.container.port }}
+                    initialDelaySeconds: {{ .Values.scanexporter.liveness.initialDelay }}
+                    periodSeconds: {{ .Values.scanexporter.liveness.period }}
+                ports:
+                    - name: "metrics"
+                    - containerPort: {{ .Values.scanexporter.container.port }}
+            volumes:
+            - name: config
+              configMap:
+                name: scan-exporter-config
