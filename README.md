@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Devops.Works helm charts
 
 This repository hosts [Devops.Works](http://devops.works/) helm charts.
@@ -246,3 +247,6 @@ Or use rollout restart
 ```bash
 kubectl rollout restart deployment/scanexporter-scan-exporter
 ```
+=======
+# Scan-Exporter
+>>>>>>> 5af0e810fad127e83ad5963c41e61fc38591a9ae
